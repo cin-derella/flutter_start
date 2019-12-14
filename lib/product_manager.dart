@@ -22,6 +22,11 @@ class _ProductManagerState extends State<ProductManager> {
     _products.add(widget.startingProduct);
     super.initState();
   }
+@override
+  void didUpdateWidget(ProductManager oldWidget) {
+    print('[ProductsManager State] didUpdateWidget()');
+    super.didUpdateWidget(oldWidget);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +37,7 @@ class _ProductManagerState extends State<ProductManager> {
         Container(
           margin: EdgeInsets.all(10.0),
           child: RaisedButton(
+            color:Theme.of(context).primaryColor,
             onPressed: () {
               setState(() {
                 _products.add('Advanced Dark Forest');
