@@ -10,7 +10,7 @@ class ProductManager extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     print('[ProductsManager] createState()');
-    // TODO: implement createState
+
     return _ProductManagerState();
   }
 }
@@ -50,7 +50,7 @@ class _ProductManagerState extends State<ProductManager> {
   @override
   Widget build(BuildContext context) {
     print('[ProductsManager State] build()');
-    // TODO: implement build
+  
     return Column(
       children: [
         Container(

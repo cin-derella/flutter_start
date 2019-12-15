@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './product_manager.dart';
+//import './product_manager.dart';
 import './pages/auth.dart';
 
 main() {
