@@ -12,11 +12,8 @@ class AuthPage extends StatelessWidget {
         child: RaisedButton(
             child: Text('LOGIN'),
             onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => ProductsPage()),
-              );
+              Navigator.pushReplacementNamed(context, '/');
+              
             }),
       ),
     );
