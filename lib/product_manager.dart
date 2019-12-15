@@ -22,7 +22,7 @@ class _ProductManagerState extends State<ProductManager> {
   void initState() {
     print('[ProductsManager] initState()');
     if(widget.startingProduct != null){
-      _products.add(widget.startingProduct);
+    _products.add(widget.startingProduct);
     }
    
     super.initState();
