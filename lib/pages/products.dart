@@ -17,10 +17,7 @@ class ProductsPage extends StatelessWidget {
             ListTile(
               title: Text('Manage Books'),
               onTap: () {
-                Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => ProductsAdminPage()));
+                Navigator.pushReplacementNamed(context,'/admin');
               },
             )
           ],
