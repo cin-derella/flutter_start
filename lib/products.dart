@@ -7,24 +7,24 @@ class Products extends StatelessWidget {
 
   }
 
-
+Widget _buildProductItem(BuildContext context,int index){
+  return Card(
+    child: Column
+      (children: <Widget>[
+        Image.asset('assets/darkforest.jpg'),
+        Text(products[index])
+      ],
+    ),
+  );
+}
   @override
   Widget build(BuildContext context) {
     print('[Products Widget] build()');
 
-    return Column(
-          children: products
-              .map(
-                (element) => Card(
-                  child: Column(
-                    children: <Widget>[
-                      Image.asset('assets/darkforest.jpg'),
-                      Text(element)
-                    ],
-                  ),
-                ),
-              )
-              .toList(),
+    return ListView.builder(
+      itemBuilder: _buildProductItem,
+      itemCount: products.length,
+          
         );
   }
 }
