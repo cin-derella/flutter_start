@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 class ProductPage extends StatelessWidget {
 
@@ -10,7 +11,12 @@ class ProductPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold(
+    return WillPopScope(onWillPop: (){
+      print ('Back button pressed');
+      Navigator.pop(context,false);
+      return Future.value(false);
+
+    },child: Scaffold(
         appBar: AppBar(
           title: Text(title),
         ),
@@ -34,6 +40,6 @@ class ProductPage extends StatelessWidget {
           ],
         )
         //Center(child: Text('On the Book Page'),),
-        );
+      ),);
   }
 }
