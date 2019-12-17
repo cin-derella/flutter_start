@@ -33,12 +33,20 @@ class Products extends StatelessWidget {
                         color: Theme.of(context).accentColor,
                         borderRadius: BorderRadius.circular(5.0)),
                     child: Text(
-                      '¥ '+products[index]['price'].toString(),
+                      '¥ ' + products[index]['price'].toString(),
                       style: TextStyle(color: Colors.white),
                     ),
                   )
                 ],
               )),
+          Container(
+              padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.5),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.green, width: 1.0),
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              child: Text('Wudaokou,Beijing'),
+              ),
           ButtonBar(
             alignment: MainAxisAlignment.center,
             children: <Widget>[
