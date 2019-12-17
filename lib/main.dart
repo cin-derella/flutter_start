@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 //import './product_manager.dart';
 import './pages/auth.dart';
 import './pages/products_admin.dart';
 import './pages/products.dart';
 import './pages/product.dart';
 
-main() {
+void main() {
+  //debugPaintSizeEnabled = true;
+  //debugPaintBaselinesEnabled = true;
+  //debugPaintPointersEnabled=true;
   runApp(MyApp());
 }
 

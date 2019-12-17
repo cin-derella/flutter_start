@@ -19,14 +19,15 @@ class Products extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    products[index]['title'],
-                    style:
-                        TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
-                  ),
+                      products[index]['title'],
+                      style: TextStyle(
+                          fontSize: 26.0, fontWeight: FontWeight.bold),
+                    ),
+                  
                   SizedBox(
                     width: 8.0,
                   ),
-                  Container(
+                 Container(
                     padding:
                         EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.5),
                     decoration: BoxDecoration(
@@ -40,13 +41,13 @@ class Products extends StatelessWidget {
                 ],
               )),
           Container(
-              padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.5),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.green, width: 1.0),
-                borderRadius: BorderRadius.circular(5.0),
-              ),
-              child: Text('Wudaokou,Beijing'),
-              ),
+            padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.5),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.green, width: 1.0),
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+            child: Text('Wudaokou,Beijing'),
+          ),
           ButtonBar(
             alignment: MainAxisAlignment.center,
             children: <Widget>[
