@@ -10,6 +10,7 @@ import 'package:scoped_model/scoped_model.dart';
 import './scoped-models/products.dart';
 
 
+
 void main() {
   //debugPaintSizeEnabled = true;
   //debugPaintBaselinesEnabled = true;
@@ -50,7 +51,7 @@ class _MyAppState extends State<MyApp> {
               final int index = int.parse(pathElements[2]);
               return MaterialPageRoute<bool>(
                 builder: (BuildContext context) =>
-                    ProductPage(null, null, null, null),
+                    ProductPage(index),
               );
             }
             return null;

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'dart:async';
-//import '../widgets/ui_elements/title_default.dart';
+import '../widgets/ui_elements/title_default.dart';
+import '../scoped-models/products.dart';
+import '../models/product.dart';
 
 class ProductPage extends StatelessWidget {
-  final String title;
-  final String imageUrl;
-  final double price;
-  final String description;
 
-  ProductPage(this.title, this.imageUrl, this.price, this.description);
+  final int productIndex;
+  ProductPage(this.productIndex);
 
-  Widget _buildAddressPriceRow() {
+  Widget _buildAddressPriceRow(double price) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -65,20 +65,22 @@ class ProductPage extends StatelessWidget {
         Navigator.pop(context, false);
         return Future.value(false);
       },
-      child: Scaffold(
+      child: ScopedModelDescendant<ProductsModel>(builder:(BuildContext context, Widget child,ProductsModel model){
+        final Product product = model.products[productIndex];
+        return Scaffold(
           appBar: AppBar(
-            title: Text(title),
+            title: Text(product.title),
           ),
           body: Column(
             //mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Image.asset(imageUrl),
+              Image.asset(product.image),
               Container(
                 padding: EdgeInsets.all(10.0),
-                child: Text(title),
+                child: Text(product.title),
               ),
-              _buildAddressPriceRow(),
+              _buildAddressPriceRow(product.price),
               Container(
                 padding: EdgeInsets.all(10.0),
                 child: RaisedButton(
@@ -88,9 +90,10 @@ class ProductPage extends StatelessWidget {
                 ),
               )
             ],
-          )
-          //Center(child: Text('On the Book Page'),),
           ),
+          //Center(child: Text('On the Book Page'),),
+        );
+      },)
     );
   }
 }
