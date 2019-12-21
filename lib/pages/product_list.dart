@@ -6,7 +6,27 @@ class ProductListPage extends StatelessWidget {
   final Function updateProduct;
   final Function deleteProdut;
   final List<Map<String, dynamic>> products;
-  ProductListPage(this.products, this.updateProduct,this.deleteProdut);
+
+  ProductListPage(this.products, this.updateProduct, this.deleteProdut);
+
+  Widget _buildEditButton(BuildContext context, int index) {
+    return IconButton(
+      icon: Icon(Icons.edit),
+      onPressed: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (BuildContext context) {
+              return ProductEditPage(
+                product: products[index],
+                updateProduct: updateProduct,
+                productIndex: index,
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,18 +34,17 @@ class ProductListPage extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         return Dismissible(
             key: Key(products[index]['title']),
-            onDismissed: (DismissDirection direction){
-              if(direction == DismissDirection.endToStart){
+            onDismissed: (DismissDirection direction) {
+              if (direction == DismissDirection.endToStart) {
                 deleteProdut(index);
                 print('Swiped end to start');
-              }else if(direction ==DismissDirection.startToEnd){
+              } else if (direction == DismissDirection.startToEnd) {
                 print('Swiped start to end');
-              }else{
+              } else {
                 print('Other swiping');
               }
             },
             background: Container(color: Colors.red),
-
             child: Column(children: <Widget>[
               ListTile(
                 leading: CircleAvatar(
@@ -33,22 +52,7 @@ class ProductListPage extends StatelessWidget {
                 ),
                 title: Text(products[index]['title']),
                 subtitle: Text('\¥${products[index]['price'].toString()}'),
-                trailing: IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return ProductEditPage(
-                            product: products[index],
-                            updateProduct: updateProduct,
-                            productIndex: index,
-                          );
-                        },
-                      ),
-                    );
-                  },
-                ),
+                trailing: _buildEditButton(context, index),
               ),
               Divider()
             ]));
