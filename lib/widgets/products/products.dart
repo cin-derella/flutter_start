@@ -2,15 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_start/models/product.dart';
 import './product_card.dart';
 import '../../models/product.dart';
+import '../../scoped-models/products.dart';
+import 'package:scoped_model/scoped_model.dart';
+
 
 class Products extends StatelessWidget {
-  final List<Product> products;
 
-  Products(this.products) {
-    print('[Products Widget] Constructor');
-  }
-
-  Widget _buildProductLists() {
+  Widget _buildProductLists(List<Product>products) {
     Widget productCards;
     if (products.length > 0) {
       productCards = ListView.builder(
@@ -28,6 +26,8 @@ class Products extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print('[Products Widget] build()');
-    return _buildProductLists();
+    return ScopedModelDescendant<ProductsModel>(builder:(BuildContext context, Widget child, ProductsModel model){
+        return _buildProductLists(model.products);
+     },) ;
   }
 }
