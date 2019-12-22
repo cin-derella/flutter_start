@@ -4,6 +4,7 @@ import './product_card.dart';
 import '../../models/product.dart';
 import '../../scoped-models/main.dart';
 import 'package:scoped_model/scoped_model.dart';
+import '../../scoped-models/connected_products.dart';
 
 
 class Products extends StatelessWidget {
