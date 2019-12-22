@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_start/scoped-models/main.dart';
 //import 'package:flutter/rendering.dart';
 //import './product_manager.dart';
 import './pages/auth.dart';
@@ -7,7 +8,7 @@ import './pages/products.dart';
 import './pages/product.dart';
 //import './models/product.dart';
 import 'package:scoped_model/scoped_model.dart';
-import './scoped-models/products.dart';
+import './scoped-models/main.dart';
 
 
 
@@ -28,8 +29,8 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return ScopedModel<ProductsModel>(
-      model: ProductsModel(),
+    return ScopedModel<MainModel>(
+      model: MainModel(),
       child: MaterialApp(
           theme: ThemeData(
               brightness: Brightness.light,
