@@ -1,5 +1,6 @@
+import 'dart:convert';
 import 'package:scoped_model/scoped_model.dart';
-
+import 'package:http/http.dart' as http;
 import '../models/product.dart';
 import '../models/user.dart';
 
@@ -9,9 +10,19 @@ class ConnectedProductsModel extends Model {
   int _selProductIndex;
 
   void addProduct(
-      String titile, String description, String image, double price) {
+      String title, String description, String image, double price) {
+    final Map<String, dynamic> productData = {
+      'title': title,
+      'description': description,
+      'image':
+          'https://images-na.ssl-images-amazon.com/images/I/919XM42JQlL.jpg',
+      'price': price
+    };
+    http.post('https://flutter-products-16a3c.firebaseio.com/products.json',
+        body: json.encode(productData));
+        
     final Product newProduct = Product(
-        title: titile,
+        title: title,
         description: description,
         image: image,
         price: price,
@@ -23,8 +34,6 @@ class ConnectedProductsModel extends Model {
 }
 
 class ProductsModel extends ConnectedProductsModel {
-
-
   bool _showFavorites = false;
 
   List<Product> get allProducts {
@@ -49,15 +58,14 @@ class ProductsModel extends ConnectedProductsModel {
     return _products[selectedProductIndex];
   }
 
-  bool get displayFavoritesOnly{
+  bool get displayFavoritesOnly {
     return _showFavorites;
-  } 
+  }
 
-
-
-  void updateProduct(String titile, String description, String image, double price ){
+  void updateProduct(
+      String title, String description, String image, double price) {
     final Product updatedProduct = Product(
-        title: titile,
+        title: title,
         description: description,
         image: image,
         price: price,
@@ -73,8 +81,7 @@ class ProductsModel extends ConnectedProductsModel {
   }
 
   void toggleProductFavoriteStatus() {
-    final bool isCurrentlyFavorite =
-        _products[selectedProductIndex].isFavorite;
+    final bool isCurrentlyFavorite = _products[selectedProductIndex].isFavorite;
     final bool newFavoriteStatus = !isCurrentlyFavorite;
     final Product updatedProduct = Product(
         title: selectedProduct.title,
@@ -94,12 +101,12 @@ class ProductsModel extends ConnectedProductsModel {
 
   void toggleDisplayMode() {
     _showFavorites = !_showFavorites;
-      notifyListeners();
+    notifyListeners();
   }
 }
 
 class UserModel extends ConnectedProductsModel {
-  void login(String email,String password){
-    _authenticatedUser = User(id:'123',email: email,password: password);
+  void login(String email, String password) {
+    _authenticatedUser = User(id: '123', email: email, password: password);
   }
 }
