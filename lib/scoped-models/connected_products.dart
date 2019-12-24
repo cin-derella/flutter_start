@@ -16,7 +16,9 @@ class ConnectedProductsModel extends Model {
       'description': description,
       'image':
           'https://images-na.ssl-images-amazon.com/images/I/919XM42JQlL.jpg',
-      'price': price
+      'price': price,
+      'userEmail': _authenticatedUser.email,
+      'userId': _authenticatedUser.id,
     };
     http
         .post('https://flutter-products-16a3c.firebaseio.com/products.json',
@@ -89,7 +91,21 @@ class ProductsModel extends ConnectedProductsModel {
     http
         .get('https://flutter-products-16a3c.firebaseio.com/products.json')
         .then((http.Response response) {
-      print(json.decode(response.body));
+      final List<Product> fetchedProductList = [];
+      final Map<String, dynamic> productListData = json.decode(response.body);
+      productListData.forEach((String productId, dynamic productData) {
+        final Product product = Product(
+            id: productId,
+            title: productData['title'],
+            description: productData['description'],
+            image: productData['image'],
+            price: productData['price'],
+            userEmail: productData['userEmail'],
+            userId: productData['userId']);
+        fetchedProductList.add(product);
+      });
+      _products = fetchedProductList;
+      notifyListeners();
     });
   }
 
