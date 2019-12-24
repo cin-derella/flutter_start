@@ -18,18 +18,23 @@ class ConnectedProductsModel extends Model {
           'https://images-na.ssl-images-amazon.com/images/I/919XM42JQlL.jpg',
       'price': price
     };
-    http.post('https://flutter-products-16a3c.firebaseio.com/products.json',
-        body: json.encode(productData));
-        
-    final Product newProduct = Product(
-        title: title,
-        description: description,
-        image: image,
-        price: price,
-        userEmail: _authenticatedUser.email,
-        userId: _authenticatedUser.id);
-    _products.add(newProduct);
-    notifyListeners();
+    http
+        .post('https://flutter-products-16a3c.firebaseio.com/products.json',
+            body: json.encode(productData))
+        .then((http.Response response) {
+      final Map<String, dynamic> responseData = json.decode(response.body);
+
+      final Product newProduct = Product(
+          id: responseData['name'],
+          title: title,
+          description: description,
+          image: image,
+          price: price,
+          userEmail: _authenticatedUser.email,
+          userId: _authenticatedUser.id);
+      _products.add(newProduct);
+      notifyListeners();
+    });
   }
 }
 
