@@ -3,6 +3,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:http/http.dart' as http;
 import '../models/product.dart';
 import '../models/user.dart';
+import 'dart:async';
 
 class ConnectedProductsModel extends Model {
   List<Product> _products = [];
@@ -10,9 +11,10 @@ class ConnectedProductsModel extends Model {
   int _selProductIndex;
   bool _isLoading = false;
 
-  void addProduct(
+Future<Null> addProduct(
       String title, String description, String image, double price) {
         _isLoading = true;
+        notifyListeners();
     final Map<String, dynamic> productData = {
       'title': title,
       'description': description,
@@ -22,7 +24,7 @@ class ConnectedProductsModel extends Model {
       'userEmail': _authenticatedUser.email,
       'userId': _authenticatedUser.id,
     };
-    http
+    return http
         .post('https://flutter-products-16a3c.firebaseio.com/products.json',
             body: json.encode(productData))
         .then((http.Response response) {
@@ -91,12 +93,18 @@ class ProductsModel extends ConnectedProductsModel {
 
   void fetchProducts() {
     _isLoading = true;
+    notifyListeners();
     http
         .get('https://flutter-products-16a3c.firebaseio.com/products.json')
         .then((http.Response response) {
          
       final List<Product> fetchedProductList = [];
       final Map<String, dynamic> productListData = json.decode(response.body);
+      if(productListData == null){
+        _isLoading = false;
+        notifyListeners();
+        return;
+      }
       productListData.forEach((String productId, dynamic productData) {
         final Product product = Product(
             id: productId,
