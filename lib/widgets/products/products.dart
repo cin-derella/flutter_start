@@ -9,7 +9,7 @@ import '../../scoped-models/connected_products.dart';
 
 class Products extends StatelessWidget {
 
-  Widget _buildProductLists(List<Product>products) {
+  Widget _buildProductList(List<Product>products) {
     Widget productCards;
     if (products.length > 0) {
       productCards = ListView.builder(
@@ -28,7 +28,7 @@ class Products extends StatelessWidget {
   Widget build(BuildContext context) {
     print('[Products Widget] build()');
     return ScopedModelDescendant<MainModel>(builder:(BuildContext context, Widget child, MainModel model){
-        return _buildProductLists(model.displayedProducts) ;
+        return _buildProductList(model.displayedProducts) ;
      },) ;
   }
 }
