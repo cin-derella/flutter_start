@@ -75,19 +75,16 @@ class ProductPage extends StatelessWidget {
             //mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Image.asset(product.image),
+              Image.network(product.image),
               Container(
                 padding: EdgeInsets.all(10.0),
-                child: Text(product.title),
+                child: TitleDefault(product.title),
               ),
               _buildAddressPriceRow(product.price),
               Container(
                 padding: EdgeInsets.all(10.0),
-                child: RaisedButton(
-                  color: Theme.of(context).accentColor,
-                  child: Text('DELETE'),
-                  onPressed: () => _showWarningDialog(context),
-                ),
+                child:Text(product.description,textAlign: TextAlign.center,)
+                
               )
             ],
           ),
