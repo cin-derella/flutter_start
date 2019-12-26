@@ -6,7 +6,6 @@ import '../../models/product.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../../scoped-models/main.dart';
 
-
 class ProductCard extends StatelessWidget {
   final Product product;
   final int productIndex;
@@ -60,7 +59,12 @@ class ProductCard extends StatelessWidget {
     return Card(
       child: Column(
         children: <Widget>[
-          Image.network(product.image),
+          FadeInImage(
+            image: NetworkImage(product.image),
+            height: 300.0,
+            fit: BoxFit.cover,
+            placeholder: AssetImage('assets/background.jpg'),
+          ),
           _buildTitlePriceRow(),
           AddressTag('Wudaokou,Beijing'),
           Text(product.userEmail),
