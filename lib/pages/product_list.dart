@@ -26,7 +26,7 @@ class _ProductListPageState extends State<ProductListPage>{
     return IconButton(
       icon: Icon(Icons.edit),
       onPressed: () {
-        model.selectProduct(index);
+        model.selectProduct(model.allProducts[index].id);
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (BuildContext context) {
@@ -44,11 +44,13 @@ class _ProductListPageState extends State<ProductListPage>{
       builder: (BuildContext context, Widget child, MainModel model) {
         return ListView.builder(
           itemBuilder: (BuildContext context, int index) {
+            String image = model.allProducts[index].image;
+            print('image is:' + image);
             return Dismissible(
                 key: Key(model.allProducts[index].title),
                 onDismissed: (DismissDirection direction) {
                   if (direction == DismissDirection.endToStart) {
-                    model.selectProduct(index);
+                    model.selectProduct(model.allProducts[index].id);
                     model.deleteProduct(index);
                     print('Swiped end to start');
                   } else if (direction == DismissDirection.startToEnd) {
@@ -63,6 +65,7 @@ class _ProductListPageState extends State<ProductListPage>{
                     leading: CircleAvatar(
                       backgroundImage:
                           NetworkImage(model.allProducts[index].image),
+                          //AssetImage('assets/background.jpg'),
                     ),
                     title: Text(model.allProducts[index].title),
                     subtitle:
