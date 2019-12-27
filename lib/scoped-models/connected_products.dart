@@ -137,6 +137,7 @@ class ProductsModel extends ConnectedProductsModel {
 
 Future<Null>fetchProducts() {
     _isLoading = true;
+    print('pure fetchProducts');
     notifyListeners();
     return 
     http
@@ -162,7 +163,10 @@ Future<Null>fetchProducts() {
       });
       _products = fetchedProductList;
       _isLoading = false;
+      //_selProductId = null;
       notifyListeners();
+      print('connected products fetchProducts:');
+      //print(selectedProductId);
     });
   }
 

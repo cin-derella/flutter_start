@@ -19,7 +19,10 @@ class ProductListPage extends StatefulWidget {
 class _ProductListPageState extends State<ProductListPage>{
   @override
   initState(){
-    widget.model.fetchProducts();
+    widget.model.fetchProducts().then((_){
+      print('fetch in productListPageState initState');
+      widget.model.selectProduct(null);});
+    
     super.initState();
   }
   Widget _buildEditButton(BuildContext context, int index, MainModel model) {
@@ -42,10 +45,13 @@ class _ProductListPageState extends State<ProductListPage>{
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
       builder: (BuildContext context, Widget child, MainModel model) {
+        print(DateTime.now().second.toString() +
+          "." +
+          DateTime.now().microsecond.toString() + 'product list page:build' + model.selectedProductId.toString());
         return ListView.builder(
           itemBuilder: (BuildContext context, int index) {
             String image = model.allProducts[index].image;
-            print('image is:' + image);
+            //print('image is:' + image);
             return Dismissible(
                 key: Key(model.allProducts[index].title),
                 onDismissed: (DismissDirection direction) {
