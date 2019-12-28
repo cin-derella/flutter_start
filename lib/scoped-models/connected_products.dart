@@ -28,12 +28,11 @@ class ConnectedProductsModel extends Model {
         .post('https://flutter-products-16a3c.firebaseio.com/products.json',
             body: json.encode(productData))
         .then((http.Response response) {
-          if(response.statusCode != 200 && response.statusCode != 201){
-            _isLoading = false;
-            notifyListeners();
-            return false;
-
-          }
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
       final Map<String, dynamic> responseData = json.decode(response.body);
       final Product newProduct = Product(
           id: responseData['name'],
@@ -47,6 +46,10 @@ class ConnectedProductsModel extends Model {
       _isLoading = false;
       notifyListeners();
       return true;
+    }).catchError((error) {
+      _isLoading = false;
+      notifyListeners();
+      return false;
     });
   }
 }
@@ -65,14 +68,13 @@ class ProductsModel extends ConnectedProductsModel {
     return List.from(_products);
   }
 
- int get  selectedProductIndex {
-   return _products.indexWhere((Product product){
-            return product.id == _selProductId;
-   });
+  int get selectedProductIndex {
+    return _products.indexWhere((Product product) {
+      return product.id == _selProductId;
+    });
   }
 
-
- String get selectedProductId {
+  String get selectedProductId {
     return _selProductId;
   }
 
@@ -83,7 +85,7 @@ class ProductsModel extends ConnectedProductsModel {
     if (selectedProductIndex == -1) {
       return null;
     }
-    Product p = _products.firstWhere((Product product){
+    Product p = _products.firstWhere((Product product) {
       return product.id == _selProductId;
     });
     //print(p);
@@ -94,7 +96,7 @@ class ProductsModel extends ConnectedProductsModel {
     return _showFavorites;
   }
 
-  Future<Null> updateProduct(
+  Future<bool> updateProduct(
       String title, String description, String image, double price) {
     final Map<String, dynamic> updateData = {
       'title': title,
@@ -119,44 +121,52 @@ class ProductsModel extends ConnectedProductsModel {
           price: price,
           userEmail: selectedProduct.userEmail,
           userId: selectedProduct.userId);
-          
+
       _products[selectedProductIndex] = updatedProduct;
       notifyListeners();
-    });
+      return true;
+    }).catchError((error) {
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    });;
   }
 
-
-  void deleteProduct(int index) {
+  Future<bool> deleteProduct(int index) {
     _isLoading = true;
     final deletedProductId = selectedProduct.id;
     _products.removeAt(selectedProductIndex);
     _selProductId = null;
     notifyListeners();
 
-    http
+    return http
         .delete(
             'https://flutter-products-16a3c.firebaseio.com/products/${deletedProductId}.json')
         .then((http.Response response) {
       _isLoading = false;
       notifyListeners();
-    });
+      return true;
+    }).catchError((error) {
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    });;
   }
 
-Future<Null> fetchProductsRefresh() {
-  Future<Null> f = fetchProducts();
-  print('selectProduct to null in refresh');
-  selectProduct(null);
-  return f;
-}
+  Future<Null> fetchProductsRefresh() {
+    Future<Null> f = fetchProducts();
+    print('selectProduct to null in refresh');
+    selectProduct(null);
+    return f;
+  }
 
-Future<Null> fetchProducts() {
+  Future<Null> fetchProducts() {
     _isLoading = true;
     //print('pure fetchProducts');
     notifyListeners();
-    return 
-    http
+    return http
         .get('https://flutter-products-16a3c.firebaseio.com/products.json')
-        .then((http.Response response) {
+        .then<Null>((http.Response response) {
       final List<Product> fetchedProductList = [];
       final Map<String, dynamic> productListData = json.decode(response.body);
       if (productListData == null) {
@@ -177,19 +187,23 @@ Future<Null> fetchProducts() {
       });
       _products = fetchedProductList;
       _isLoading = false;
-      
+
       notifyListeners();
       //_selProductId = null;
       //print('connected products fetchProducts:');
       //print(selectedProductId);
-    });
+    }).catchError((error) {
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    });;
   }
 
   void toggleProductFavoriteStatus() {
     final bool isCurrentlyFavorite = selectedProduct.isFavorite;
     final bool newFavoriteStatus = !isCurrentlyFavorite;
     final Product updatedProduct = Product(
-        id:selectedProduct.id,
+        id: selectedProduct.id,
         title: selectedProduct.title,
         description: selectedProduct.description,
         price: selectedProduct.price,
