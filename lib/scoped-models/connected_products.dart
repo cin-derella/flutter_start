@@ -79,7 +79,7 @@ class ProductsModel extends ConnectedProductsModel {
     Product p = _products.firstWhere((Product product){
       return product.id == _selProductId;
     });
-    print(p);
+    //print(p);
     return p;
   }
 
@@ -135,9 +135,16 @@ class ProductsModel extends ConnectedProductsModel {
     });
   }
 
-Future<Null>fetchProducts() {
+Future<Null> fetchProductsRefresh() {
+  Future<Null> f = fetchProducts();
+  print('selectProduct to null in refresh');
+  selectProduct(null);
+  return f;
+}
+
+Future<Null> fetchProducts() {
     _isLoading = true;
-    print('pure fetchProducts');
+    //print('pure fetchProducts');
     notifyListeners();
     return 
     http
@@ -163,9 +170,10 @@ Future<Null>fetchProducts() {
       });
       _products = fetchedProductList;
       _isLoading = false;
-      //_selProductId = null;
+      
       notifyListeners();
-      print('connected products fetchProducts:');
+      //_selProductId = null;
+      //print('connected products fetchProducts:');
       //print(selectedProductId);
     });
   }

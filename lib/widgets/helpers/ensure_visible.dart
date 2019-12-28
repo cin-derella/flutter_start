@@ -36,7 +36,7 @@ class EnsureVisibleWhenFocusedState extends State<EnsureVisibleWhenFocused> {
   }
 
   Future<Null> _ensureVisible() async {
-    await new Future.delayed(const Duration(milliseconds: 3000));
+    await new Future.delayed(const Duration(milliseconds: 500));
 
     if (!widget.focusNode.hasFocus) return;
 

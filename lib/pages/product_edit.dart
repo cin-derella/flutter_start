@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_start/utils.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../widgets/helpers/ensure_visible.dart';
 import '../models/product.dart';
 import '../scoped-models/main.dart';
 
 class ProductEditPage extends StatefulWidget {
+  final MainModel model;
+  ProductEditPage(this.model);
   @override
   State<StatefulWidget> createState() {
     return _ProductEditPageState();
@@ -23,7 +26,45 @@ class _ProductEditPageState extends State<ProductEditPage> {
   final _descriptionFocusNode = FocusNode();
   final _priceFocusNode = FocusNode();
 
+  @override
+  initState() {
+    /*
+    widget.model.fetchProducts().then((_) {
+      print('fetch in productEditPageState initState');
+      widget.model.selectProduct(null);
+    });
+    */
+    super.initState();
+  }
+
+  void _submitForm(
+      Function addProduct, Function updateProduct, Function setSelectedProduct,
+      [int selectedProductIndex]) {
+    if (!_formKey.currentState.validate()) {
+      return;
+    }
+
+    _formKey.currentState.save();
+    if (selectedProductIndex == -1) {
+      addProduct(_formData['title'], _formData['description'],
+              _formData['image'], _formData['price'])
+          .then((_) => Navigator.pushReplacementNamed(context, '/products'));
+      //.then((_) => setSelectedProduct(null));
+    } else {
+      updateProduct(_formData['title'], _formData['description'],
+              _formData['image'], _formData['price'])
+          .then((_) {
+        Navigator.pushReplacementNamed(context, '/products');
+        //setSelectedProduct(null);
+      });
+      //.then((_) => setSelectedProduct(null));
+      //setSelectedProduct(null);
+      //widget.model.notifyListeners();
+    }
+  }
+
   Widget _buildTitleTextField(Product product) {
+    print(LogStamp().stamp() + 'buildTitleTextField:' + product.toString());
     return EnsureVisibleWhenFocused(
       focusNode: _titleFocusNode,
       child: TextFormField(
@@ -151,36 +192,12 @@ class _ProductEditPageState extends State<ProductEditPage> {
     );
   }
 
-  void _submitForm(
-      Function addProduct, Function updateProduct, Function setSelectedProduct,
-      [int selectedProductIndex]) {
-    if (!_formKey.currentState.validate()) {
-      return;
-    }
-
-    _formKey.currentState.save();
-    if (selectedProductIndex == -1) {
-      addProduct(_formData['title'], _formData['description'],
-              _formData['image'], _formData['price'])
-          .then((_) => Navigator.pushReplacementNamed(context, '/products'));
-      //.then((_) => setSelectedProduct(null));
-    } else {
-      updateProduct(_formData['title'], _formData['description'],
-              _formData['image'], _formData['price'])
-          .then((_) => Navigator.pushReplacementNamed(context, '/products'));
-      //.then((_) => setSelectedProduct(null));
-      //setSelectedProduct(null);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
         builder: (BuildContext context, Widget child, MainModel model) {
-      print(DateTime.now().second.toString() +
-          "." +
-          DateTime.now().microsecond.toString() +
-          ":product edit page:build:" +
+      print(LogStamp().stamp() +
+          ":product edit page:build: " +
           model.selectedProductIndex.toString());
 
       final Widget pageContent =
