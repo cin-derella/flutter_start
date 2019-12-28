@@ -10,48 +10,6 @@ class ConnectedProductsModel extends Model {
   User _authenticatedUser;
   String _selProductId;
   bool _isLoading = false;
-
-  Future<bool> addProduct(
-      String title, String description, String image, double price) async {
-    _isLoading = true;
-    notifyListeners();
-    final Map<String, dynamic> productData = {
-      'title': title,
-      'description': description,
-      'image':
-          'https://images.findawayworld.com/v1/image/cover/CD058637?aspect=1:1&width=960',
-      'price': price,
-      'userEmail': _authenticatedUser.email,
-      'userId': _authenticatedUser.id,
-    };
-    try {
-      final http.Response response = await http.post(
-          'https://flutter-products-16a3c.firebaseio.com/products.json',
-          body: json.encode(productData));
-      if (response.statusCode != 200 && response.statusCode != 201) {
-        _isLoading = false;
-        notifyListeners();
-        return false;
-      }
-      final Map<String, dynamic> responseData = json.decode(response.body);
-      final Product newProduct = Product(
-          id: responseData['name'],
-          title: title,
-          description: description,
-          image: responseData['image'],
-          price: price,
-          userEmail: _authenticatedUser.email,
-          userId: _authenticatedUser.id);
-      _products.add(newProduct);
-      _isLoading = false;
-      notifyListeners();
-      return true;
-    } catch (error) {
-      _isLoading = false;
-      notifyListeners();
-      return false;
-    }
-  }
 }
 
 class ProductsModel extends ConnectedProductsModel {
@@ -95,6 +53,49 @@ class ProductsModel extends ConnectedProductsModel {
   bool get displayFavoritesOnly {
     return _showFavorites;
   }
+
+Future<bool> addProduct(
+      String title, String description, String image, double price) async {
+    _isLoading = true;
+    notifyListeners();
+    final Map<String, dynamic> productData = {
+      'title': title,
+      'description': description,
+      'image':
+          'https://images.findawayworld.com/v1/image/cover/CD058637?aspect=1:1&width=960',
+      'price': price,
+      'userEmail': _authenticatedUser.email,
+      'userId': _authenticatedUser.id,
+    };
+    try {
+      final http.Response response = await http.post(
+          'https://flutter-products-16a3c.firebaseio.com/products.json',
+          body: json.encode(productData));
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
+      final Map<String, dynamic> responseData = json.decode(response.body);
+      final Product newProduct = Product(
+          id: responseData['name'],
+          title: title,
+          description: description,
+          image: responseData['image'],
+          price: price,
+          userEmail: _authenticatedUser.email,
+          userId: _authenticatedUser.id);
+      _products.add(newProduct);
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (error) {
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
 
   Future<bool> updateProduct(
       String title, String description, String image, double price) {
