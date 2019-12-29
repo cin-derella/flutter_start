@@ -23,6 +23,7 @@ class EnsureVisibleWhenFocused extends StatefulWidget {
 }
 
 class EnsureVisibleWhenFocusedState extends State<EnsureVisibleWhenFocused> {
+  //final Widget child = null;
   @override
   void initState() {
     super.initState();
@@ -66,5 +67,5 @@ class EnsureVisibleWhenFocusedState extends State<EnsureVisibleWhenFocused> {
     );
   }
 
-  Widget build(BuildContext context) => widget.child;
+  Widget build(BuildContext context) { return widget.child;}
 }
