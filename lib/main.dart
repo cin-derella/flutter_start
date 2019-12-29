@@ -10,8 +10,6 @@ import './models/product.dart';
 import 'package:scoped_model/scoped_model.dart';
 import './scoped-models/main.dart';
 
-
-
 void main() {
   //debugPaintSizeEnabled = true;
   //debugPaintBaselinesEnabled = true;
@@ -27,16 +25,15 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-     final MainModel _model = MainModel();
-@override
+  final MainModel _model = MainModel();
+  @override
   void initState() {
-    _model
+    _model.autoAuthenticated();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
- 
     return ScopedModel<MainModel>(
       model: _model,
       child: MaterialApp(
@@ -47,7 +44,14 @@ class _MyAppState extends State<MyApp> {
               buttonColor: Colors.deepPurple),
           //home: AuthPage(),
           routes: {
-            '/': (BuildContext context) => AuthPage(),
+            '/': (BuildContext context) => ScopedModelDescendant(
+                  builder:
+                      (BuildContext context, Widget child, MainModel model) {
+                    return model.user == null
+                        ? AuthPage()
+                        : ProductsPage(_model);
+                  },
+                ),
             '/products': (BuildContext context) => ProductsPage(_model),
             '/admin': (BuildContext context) => ProductsAdminPage(_model),
           },
@@ -58,12 +62,12 @@ class _MyAppState extends State<MyApp> {
             }
             if (pathElements[1] == 'product') {
               final String productId = pathElements[2];
-              final Product product = _model.allProducts.firstWhere((Product product){
-                return product.id ==productId;
+              final Product product =
+                  _model.allProducts.firstWhere((Product product) {
+                return product.id == productId;
               });
               return MaterialPageRoute<bool>(
-                builder: (BuildContext context) =>
-                    ProductPage(product),
+                builder: (BuildContext context) => ProductPage(product),
               );
             }
             return null;
