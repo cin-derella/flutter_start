@@ -54,7 +54,7 @@ class ProductsModel extends ConnectedProductsModel {
     return _showFavorites;
   }
 
-Future<bool> addProduct(
+  Future<bool> addProduct(
       String title, String description, String image, double price) async {
     _isLoading = true;
     notifyListeners();
@@ -95,7 +95,6 @@ Future<bool> addProduct(
       return false;
     }
   }
-
 
   Future<bool> updateProduct(
       String title, String description, String image, double price) {
@@ -233,6 +232,22 @@ Future<bool> addProduct(
 class UserModel extends ConnectedProductsModel {
   void login(String email, String password) {
     _authenticatedUser = User(id: '123', email: email, password: password);
+  }
+
+  Future<Map<String, dynamic>> signup(String email, String password) async {
+    final Map<String, dynamic> authData = {
+      'email': email,
+      'password': password,
+      'returnSecureToken': true
+    };
+
+    final http.Response response = await http.post(
+      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDDPaNyzR79YzBH7Q6xvPphmxLCgMbcEBI',
+      body: json.encode(authData),
+      headers:{'Content-Type':'application/json'}
+    );
+    print(json.decode(response.body));
+    return {'success':true, 'message':'Authentication succeeded!'};
   }
 }
 
