@@ -15,6 +15,7 @@ void main() {
   //debugPaintSizeEnabled = true;
   //debugPaintBaselinesEnabled = true;
   //debugPaintPointersEnabled=true;
+  WidgetsFlutterBinding.ensureInitialized();
   MapView.setApiKey('AIzaSyDBrIuz3TCkz0MsktI3yJ4wjyls2DQiERU');
   runApp(MyApp());
 }
