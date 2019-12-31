@@ -37,7 +37,9 @@ class _ProductListPageState extends State<ProductListPage> {
               return ProductEditPage(model);
             },
           ),
-        );
+        ).then((_){
+          model.selectProduct(null);
+        });
       },
     );
   }
@@ -79,7 +81,7 @@ class _ProductListPageState extends State<ProductListPage> {
                           NetworkImage(model.allProducts[index].image),
                       //AssetImage('assets/background.jpg'),
                     ),
-                    title: Text(model.allProducts[index].title),
+                    title: Text(model.allProducts[index].title == null ? "no title provided" : model.allProducts[index].title),
                     subtitle:
                         Text('\¥${model.allProducts[index].price.toString()}'),
                     trailing: _buildEditButton(context, index, model),

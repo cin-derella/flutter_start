@@ -8,6 +8,7 @@ import 'dart:async';
 import '../models/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rxdart/subjects.dart';
+import '../models/location_data.dart';
 
 class ConnectedProductsModel extends Model {
   List<Product> _products = [];
@@ -59,7 +60,7 @@ class ProductsModel extends ConnectedProductsModel {
   }
 
   Future<bool> addProduct(
-      String title, String description, String image, double price) async {
+      String title, String description, String image, double price,LocationData locData) async {
     _isLoading = true;
     notifyListeners();
     final Map<String, dynamic> productData = {
@@ -70,6 +71,9 @@ class ProductsModel extends ConnectedProductsModel {
       'price': price,
       'userEmail': _authenticatedUser.email,
       'userId': _authenticatedUser.id,
+      'loc_lat':locData.latitude,
+      'loc_lng':locData.longitude,
+      'loc_address':locData.address
     };
     try {
       final http.Response response = await http.post(
@@ -257,7 +261,9 @@ class ProductsModel extends ConnectedProductsModel {
 
   void selectProduct(String productId) {
     _selProductId = productId;
-    notifyListeners();
+    if(productId != null){
+      notifyListeners();
+    }
   }
 
   void toggleDisplayMode() {

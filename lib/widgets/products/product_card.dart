@@ -19,7 +19,7 @@ class ProductCard extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            TitleDefault(product.title),
+            TitleDefault(product.title == null ? "no title provided" : product.title),
             SizedBox(
               width: 8.0,
             ),
