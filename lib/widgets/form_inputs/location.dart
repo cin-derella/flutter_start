@@ -41,7 +41,7 @@ class _LocationInputState extends State<LocationInput> {
   }
 
   void _getStaticMap(String address,
-      {bool geocode = false, double lat, double lng}) async {
+      {bool geocode = true, double lat, double lng}) async {
     if (address.isEmpty) {
       setState(() {
         _staticMapUri = null;
@@ -74,17 +74,17 @@ class _LocationInputState extends State<LocationInput> {
           LocationDataX(address: address, latitude: lat, longitude: lng);
     }
     if (mounted) {
-    final StaticMapProvider staticMapProvider =
-        StaticMapProvider('AIzaSyDBrIuz3TCkz0MsktI3yJ4wjyls2DQiERU');
-    final Uri staticMapUri = staticMapProvider.getStaticUriWithMarkers([
-      Marker('position', 'Position', _locationData.latitude,
-          _locationData.longitude)
-    ],
-        center: Location(_locationData.latitude, _locationData.longitude),
-        width: 500,
-        height: 300,
-        maptype: StaticMapViewType.roadmap);
-    widget.setLocation(_locationData);
+      final StaticMapProvider staticMapProvider =
+          StaticMapProvider('AIzaSyDBrIuz3TCkz0MsktI3yJ4wjyls2DQiERU');
+      final Uri staticMapUri = staticMapProvider.getStaticUriWithMarkers([
+        Marker('position', 'Position', _locationData.latitude,
+            _locationData.longitude)
+      ],
+          center: Location(_locationData.latitude, _locationData.longitude),
+          width: 500,
+          height: 300,
+          maptype: StaticMapViewType.roadmap);
+      widget.setLocation(_locationData);
 
       setState(() {
         _addressInputController.text = _locationData.address;
@@ -128,6 +128,7 @@ class _LocationInputState extends State<LocationInput> {
 
   @override
   Widget build(BuildContext context) {
+    print('location form build');
     return Column(
       children: <Widget>[
         EnsureVisibleWhenFocused(
