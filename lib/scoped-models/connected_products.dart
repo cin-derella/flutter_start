@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:rxdart/subjects.dart' as prefix0;
+//import 'package:rxdart/subjects.dart' as prefix0;
 import 'package:scoped_model/scoped_model.dart';
 import 'package:http/http.dart' as http;
 import '../models/product.dart';
@@ -60,7 +60,7 @@ class ProductsModel extends ConnectedProductsModel {
   }
 
   Future<bool> addProduct(String title, String description, String image,
-      double price, LocationData locData) async {
+      double price, LocationDataX locData) async {
     _isLoading = true;
     notifyListeners();
     final Map<String, dynamic> productData = {
@@ -106,7 +106,7 @@ class ProductsModel extends ConnectedProductsModel {
   }
 
   Future<bool> updateProduct(
-      String title, String description, String image, double price,LocationData locData) {
+      String title, String description, String image, double price,LocationDataX locData) {
     final Map<String, dynamic> updateData = {
       'title': title,
       'description': description,
@@ -142,7 +142,7 @@ class ProductsModel extends ConnectedProductsModel {
       notifyListeners();
       return false;
     });
-    ;
+    
   }
 
   Future<bool> deleteProduct(int index) {
@@ -164,7 +164,7 @@ class ProductsModel extends ConnectedProductsModel {
       notifyListeners();
       return false;
     });
-    ;
+  
   }
 
   Future<Null> fetchProductsRefresh() {
@@ -197,7 +197,7 @@ class ProductsModel extends ConnectedProductsModel {
             description: productData['description'],
             image: productData['image'],
             price: productData['price'],
-            location: LocationData(
+            location: LocationDataX(
                 address: productData['loc_address'],
                 latitude: productData['loc_lat'],
                 longitude: productData['loc_lng']),

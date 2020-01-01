@@ -10,7 +10,7 @@ class Product {
   final bool isFavorite;
   final String userEmail;
   final String userId;
-  final LocationData location;
+  final LocationDataX location;
 
   Product(
       {@required this.id,

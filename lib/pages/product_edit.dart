@@ -41,7 +41,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
     super.initState();
   }
 
-  void _setLocation(LocationData locData) {
+  void _setLocation(LocationDataX locData) {
     _formData['location'] = locData;
   }
 
