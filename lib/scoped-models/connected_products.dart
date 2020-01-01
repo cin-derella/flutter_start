@@ -59,8 +59,8 @@ class ProductsModel extends ConnectedProductsModel {
     return _showFavorites;
   }
 
-  Future<bool> addProduct(
-      String title, String description, String image, double price,LocationData locData) async {
+  Future<bool> addProduct(String title, String description, String image,
+      double price, LocationData locData) async {
     _isLoading = true;
     notifyListeners();
     final Map<String, dynamic> productData = {
@@ -71,9 +71,9 @@ class ProductsModel extends ConnectedProductsModel {
       'price': price,
       'userEmail': _authenticatedUser.email,
       'userId': _authenticatedUser.id,
-      'loc_lat':locData.latitude,
-      'loc_lng':locData.longitude,
-      'loc_address':locData.address
+      'loc_lat': locData.latitude,
+      'loc_lng': locData.longitude,
+      'loc_address': locData.address
     };
     try {
       final http.Response response = await http.post(
@@ -91,6 +91,7 @@ class ProductsModel extends ConnectedProductsModel {
           description: description,
           image: responseData['image'],
           price: price,
+          location: locData,
           userEmail: _authenticatedUser.email,
           userId: _authenticatedUser.id);
       _products.add(newProduct);
@@ -193,6 +194,10 @@ class ProductsModel extends ConnectedProductsModel {
             description: productData['description'],
             image: productData['image'],
             price: productData['price'],
+            location: LocationData(
+                address: productData['loc_address'],
+                latitude: productData['loc_lat'],
+                longitude: productData['loc_lng']),
             userEmail: productData['userEmail'],
             userId: productData['userId'],
             isFavorite: productData['wishlistUsers'] == null
@@ -261,7 +266,7 @@ class ProductsModel extends ConnectedProductsModel {
 
   void selectProduct(String productId) {
     _selProductId = productId;
-    if(productId != null){
+    if (productId != null) {
       notifyListeners();
     }
   }
