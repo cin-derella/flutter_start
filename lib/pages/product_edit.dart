@@ -7,7 +7,6 @@ import '../scoped-models/main.dart';
 import '../widgets/form_inputs/location.dart';
 import '../models/location_data.dart';
 
-
 class ProductEditPage extends StatefulWidget {
   final MainModel model;
   ProductEditPage(this.model);
@@ -23,12 +22,13 @@ class _ProductEditPageState extends State<ProductEditPage> {
     'description': null,
     'price': null,
     'image': 'assets/darkforest.jpg',
-    'location':null,
+    'location': null,
   };
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _titleFocusNode = FocusNode();
   final _descriptionFocusNode = FocusNode();
   final _priceFocusNode = FocusNode();
+  final _titleTextController = TextEditingController();
 
   @override
   initState() {
@@ -41,11 +41,9 @@ class _ProductEditPageState extends State<ProductEditPage> {
     super.initState();
   }
 
-
-  void _setLocation(LocationData locData){
+  void _setLocation(LocationData locData) {
     _formData['location'] = locData;
   }
-
 
   void _submitForm(
       Function addProduct, Function updateProduct, Function setSelectedProduct,
@@ -56,8 +54,8 @@ class _ProductEditPageState extends State<ProductEditPage> {
 
     _formKey.currentState.save();
     if (selectedProductIndex == -1) {
-      addProduct(_formData['title'], _formData['description'],
-              _formData['image'], _formData['price'],_formData['location'])
+      addProduct(_titleTextController.text, _formData['description'],
+              _formData['image'], _formData['price'], _formData['location'])
           .then((bool success) {
         if (success) {
           Navigator.pushReplacementNamed(context, '/products');
@@ -80,8 +78,8 @@ class _ProductEditPageState extends State<ProductEditPage> {
       });
       //.then((_) => setSelectedProduct(null));
     } else {
-      updateProduct(_formData['title'], _formData['description'],
-              _formData['image'], _formData['price'])
+      updateProduct(_titleTextController.text, _formData['description'],
+              _formData['image'], _formData['price'], _formData['location'])
           .then((_) {
         Navigator.pushReplacementNamed(context, '/products');
         //setSelectedProduct(null);
@@ -93,13 +91,26 @@ class _ProductEditPageState extends State<ProductEditPage> {
   }
 
   Widget _buildTitleTextField(Product product) {
+    if (product == null && _titleTextController.text.trim() == '') {
+      _titleTextController.text = '';
+    } else if (product != null && _titleTextController.text.trim() == '') {
+      _titleTextController.text = product.title;
+    } else if (product != null && _titleTextController.text.trim() != '') {
+      _titleTextController.text = _titleTextController.text;
+    } else if (product == null && _titleTextController.text.trim() != '') {
+      _titleTextController.text = _titleTextController.text;
+    } else {
+      _titleTextController.text = '';
+    }
+
     print(LogStamp().stamp() + 'buildTitleTextField:' + product.toString());
     return EnsureVisibleWhenFocused(
       focusNode: _titleFocusNode,
       child: TextFormField(
         focusNode: _titleFocusNode,
         decoration: InputDecoration(labelText: 'Book Title'),
-        initialValue: product == null ? '' : product.title,
+        controller: _titleTextController,
+        //initialValue: product == null ? '' : product.title,
         validator: (String value) {
           //if(value.trim().length <= 0){
           if (value.isEmpty || value.length < 5) {
@@ -206,7 +217,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
                 height: 10.0,
               ),
 
-              LocationInput(_setLocation,product),
+              LocationInput(_setLocation, product),
 
               SizedBox(
                 height: 10.0,

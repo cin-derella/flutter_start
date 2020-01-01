@@ -106,7 +106,7 @@ class ProductsModel extends ConnectedProductsModel {
   }
 
   Future<bool> updateProduct(
-      String title, String description, String image, double price) {
+      String title, String description, String image, double price,LocationData locData) {
     final Map<String, dynamic> updateData = {
       'title': title,
       'description': description,
@@ -128,6 +128,7 @@ class ProductsModel extends ConnectedProductsModel {
           description: description,
           image: image,
           price: price,
+          location: locData,
           userEmail: selectedProduct.userEmail,
           userId: selectedProduct.userId);
 
@@ -233,6 +234,7 @@ class ProductsModel extends ConnectedProductsModel {
         description: selectedProduct.description,
         price: selectedProduct.price,
         image: selectedProduct.image,
+        location: selectedProduct.location,
         userEmail: selectedProduct.userEmail,
         userId: selectedProduct.userId,
         isFavorite: newFavoriteStatus);
@@ -256,6 +258,7 @@ class ProductsModel extends ConnectedProductsModel {
           description: selectedProduct.description,
           price: selectedProduct.price,
           image: selectedProduct.image,
+          location: selectedProduct.location,
           userEmail: selectedProduct.userEmail,
           userId: selectedProduct.userId,
           isFavorite: newFavoriteStatus);
