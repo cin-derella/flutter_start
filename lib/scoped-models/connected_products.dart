@@ -113,6 +113,7 @@ class ProductsModel extends ConnectedProductsModel {
       'image':
           'https://images.findawayworld.com/v1/image/cover/CD058637?aspect=1:1&width=960',
       'price': price,
+      'loc_lat': locData.latitude,
       'loc_lng': locData.longitude,
       'loc_address': locData.address,
       'userEmail': _authenticatedUser.email,

@@ -66,7 +66,7 @@ class _LocationInputState extends State<LocationInput> {
           latitude: coords['lat'],
           longitude: coords['lng']);
 
-      print(decodedResponse);
+      print("location:__getStaticMap:" + decodedResponse.toString());
     } else if (lat == null && lng == null) {
       _locationData = widget.product.location;
     } else {
