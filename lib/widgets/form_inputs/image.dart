@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ImageInput extends StatefulWidget {
   @override
@@ -8,6 +10,14 @@ class ImageInput extends StatefulWidget {
 }
 
 class _ImageInputState extends State<ImageInput> {
+  void _getImage(BuildContext context,ImageSource source){
+      ImagePicker.pickImage(source: source,maxWidth: 400.0).then((File image){
+        Navigator.pop(context);
+
+      });
+
+  }
+
   void _openImagePicker(BuildContext context) {
     showModalBottomSheet(
         context: context,
@@ -21,13 +31,17 @@ class _ImageInputState extends State<ImageInput> {
               FlatButton(
                 textColor: Theme.of(context).primaryColor,
                 child: Text('User Camera'),
-                onPressed: () {},
+                onPressed: () {
+                  _getImage(context, ImageSource.camera);
+                },
               ),
       
               FlatButton(
                 textColor: Theme.of(context).primaryColor,
                 child: Text('Use Gallery'),
-                onPressed: () {},
+                onPressed: () {
+                  _getImage(context, ImageSource.gallery);
+                },
               )
             ]),
           );
