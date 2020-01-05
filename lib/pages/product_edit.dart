@@ -7,6 +7,7 @@ import '../scoped-models/main.dart';
 import '../widgets/form_inputs/location.dart';
 import '../models/location_data.dart';
 import '../widgets/form_inputs/image.dart';
+import 'dart:io';
 
 class ProductEditPage extends StatefulWidget {
   final MainModel model;
@@ -22,7 +23,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
     'title': null,
     'description': null,
     'price': null,
-    'image': 'assets/darkforest.jpg',
+    'image': null,
     'location': null,
   };
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -47,10 +48,15 @@ class _ProductEditPageState extends State<ProductEditPage> {
     _formData['location'] = locData;
   }
 
+  void _setImage(File image){
+    _formData['image'] = image;
+
+  }
+
   void _submitForm(
       Function addProduct, Function updateProduct, Function setSelectedProduct,
       [int selectedProductIndex]) {
-    if (!_formKey.currentState.validate()) {
+    if (!_formKey.currentState.validate() || (_formData['image']==null && selectedProductIndex ==-1)) {
       return;
     }
 
@@ -230,7 +236,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
 
               LocationInput(_setLocation, product),
               SizedBox(height: 10.0,),
-              ImageInput(),
+              ImageInput(_setImage,product),
               SizedBox(
                 height: 10.0,
               ),
