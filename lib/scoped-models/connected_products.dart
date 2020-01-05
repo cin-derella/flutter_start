@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'dart:convert';
+//import 'dart:html';
 //import 'package:rxdart/subjects.dart' as prefix0;
 import 'package:scoped_model/scoped_model.dart';
 import 'package:http/http.dart' as http;
@@ -9,6 +11,8 @@ import '../models/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rxdart/subjects.dart';
 import '../models/location_data.dart';
+import 'package:mime/mime.dart';
+import 'package:http_parser/http_parser.dart';
 
 class ConnectedProductsModel extends Model {
   List<Product> _products = [];
@@ -59,7 +63,28 @@ class ProductsModel extends ConnectedProductsModel {
     return _showFavorites;
   }
 
-  Future<bool> addProduct(String title, String description, String image,
+  Future<Map<String, String>> uploadImage(File image,
+      {String imagePath}) async {
+    final mimeTypeData = lookupMimeType(image.path).split('/');
+    final imageUploadRequest = http.MultipartRequest(
+        'POST',
+        Uri.parse(
+            'https://us-central1-flutter-products-16a3c.cloudfunctions.net/storeImage'));
+    final file = await http.MultipartFile.fromPath(
+      'image',
+      image.path,
+      contentType: MediaType(
+        mimeTypeData[0],
+        mimeTypeData[1],
+      ),
+    );
+    imageUploadRequest.files.add(file);
+    if(imagePath != null){
+      imageUploadRequest.fields['imagePath'] = Uri.encodeComponent(imagePath);
+    }
+  }
+
+  Future<bool> addProduct(String title, String description, File image,
       double price, LocationDataX locData) async {
     _isLoading = true;
     notifyListeners();
@@ -105,8 +130,8 @@ class ProductsModel extends ConnectedProductsModel {
     }
   }
 
-  Future<bool> updateProduct(
-      String title, String description, String image, double price,LocationDataX locData) {
+  Future<bool> updateProduct(String title, String description, String image,
+      double price, LocationDataX locData) {
     final Map<String, dynamic> updateData = {
       'title': title,
       'description': description,
@@ -143,7 +168,6 @@ class ProductsModel extends ConnectedProductsModel {
       notifyListeners();
       return false;
     });
-    
   }
 
   Future<bool> deleteProduct(int index) {
@@ -165,7 +189,6 @@ class ProductsModel extends ConnectedProductsModel {
       notifyListeners();
       return false;
     });
-  
   }
 
   Future<Null> fetchProductsRefresh() {
