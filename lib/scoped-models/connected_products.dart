@@ -63,7 +63,7 @@ class ProductsModel extends ConnectedProductsModel {
     return _showFavorites;
   }
 
-  Future<Map<String, String>> uploadImage(File image,
+  Future<Map<String, dynamic>> uploadImage(File image,
       {String imagePath}) async {
     final mimeTypeData = lookupMimeType(image.path).split('/');
     final imageUploadRequest = http.MultipartRequest(
@@ -79,8 +79,27 @@ class ProductsModel extends ConnectedProductsModel {
       ),
     );
     imageUploadRequest.files.add(file);
-    if(imagePath != null){
+    if (imagePath != null) {
       imageUploadRequest.fields['imagePath'] = Uri.encodeComponent(imagePath);
+    }
+    imageUploadRequest.headers['Authorization'] = 'Bearer ${_authenticatedUser.token}';
+    print('Bearer ${_authenticatedUser.token}');
+    try{
+      final streamedResponse = await imageUploadRequest.send();
+      final response = await http.Response.fromStream(streamedResponse);
+      if(response.statusCode != 200 && response.statusCode !=201){
+        print('Something went wrong:uploadImage');
+        print(response.body);
+        print('end.');
+        print(json.decode(response.body));
+        return null;
+      }
+      final responseData = json.decode(response.body);
+      return responseData;
+    }catch(error){
+      print(error);
+      return null;
+
     }
   }
 
@@ -88,14 +107,22 @@ class ProductsModel extends ConnectedProductsModel {
       double price, LocationDataX locData) async {
     _isLoading = true;
     notifyListeners();
+    final uploadData = await uploadImage(image);
+
+    if(uploadData == null){
+      print('Upload failed!');
+      return false;
+    }
+
+
     final Map<String, dynamic> productData = {
       'title': title,
       'description': description,
-      'image':
-          'https://images.findawayworld.com/v1/image/cover/CD058637?aspect=1:1&width=960',
       'price': price,
       'userEmail': _authenticatedUser.email,
       'userId': _authenticatedUser.id,
+      'imagePath':uploadData['imagePath'],
+      'imageUrl':uploadData['imageUrl'],
       'loc_lat': locData.latitude,
       'loc_lng': locData.longitude,
       'loc_address': locData.address
@@ -114,7 +141,8 @@ class ProductsModel extends ConnectedProductsModel {
           id: responseData['name'],
           title: title,
           description: description,
-          image: responseData['image'],
+          image: uploadData['imageUrl'],
+          imagePath: uploadData['imagePath'],
           price: price,
           location: locData,
           userEmail: _authenticatedUser.email,
@@ -219,7 +247,8 @@ class ProductsModel extends ConnectedProductsModel {
             id: productId,
             title: productData['title'],
             description: productData['description'],
-            image: productData['image'],
+            image: productData['imageUrl'],
+            imagePath: productData['imagePath'],
             price: productData['price'],
             location: LocationDataX(
                 address: productData['loc_address'],
@@ -260,6 +289,7 @@ class ProductsModel extends ConnectedProductsModel {
         description: selectedProduct.description,
         price: selectedProduct.price,
         image: selectedProduct.image,
+        imagePath: selectedProduct.imagePath,
         location: selectedProduct.location,
         userEmail: selectedProduct.userEmail,
         userId: selectedProduct.userId,
@@ -284,6 +314,7 @@ class ProductsModel extends ConnectedProductsModel {
           description: selectedProduct.description,
           price: selectedProduct.price,
           image: selectedProduct.image,
+          imagePath: selectedProduct.imagePath,
           location: selectedProduct.location,
           userEmail: selectedProduct.userEmail,
           userId: selectedProduct.userId,
@@ -342,7 +373,7 @@ class UserModel extends ConnectedProductsModel {
 
     final Map<String, dynamic> responseData = json.decode(response.body);
     bool hasError = true;
-    String message = 'Something went wrong.';
+    String message = 'Something went wrong. authenicate';
     print(responseData);
     if (responseData.containsKey('idToken')) {
       hasError = false;

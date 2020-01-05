@@ -32,6 +32,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
   final _priceFocusNode = FocusNode();
   final _titleTextController = TextEditingController();
   final _descriptionTextController = TextEditingController();
+  final _priceController = TextEditingController();
 
   @override
   initState() {
@@ -48,22 +49,22 @@ class _ProductEditPageState extends State<ProductEditPage> {
     _formData['location'] = locData;
   }
 
-  void _setImage(File image){
+  void _setImage(File image) {
     _formData['image'] = image;
-
   }
 
   void _submitForm(
       Function addProduct, Function updateProduct, Function setSelectedProduct,
       [int selectedProductIndex]) {
-    if (!_formKey.currentState.validate() || (_formData['image']==null && selectedProductIndex ==-1)) {
+    if (!_formKey.currentState.validate() ||
+        (_formData['image'] == null && selectedProductIndex == -1)) {
       return;
     }
 
     _formKey.currentState.save();
     if (selectedProductIndex == -1) {
       addProduct(_titleTextController.text, _descriptionTextController.text,
-              _formData['image'], _formData['price'], _formData['location'])
+              _formData['image'], double.parse(_priceController.text), _formData['location'])
           .then((bool success) {
         if (success) {
           Navigator.pushReplacementNamed(context, '/products');
@@ -72,7 +73,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text('Something went wrong'),
+                  title: Text('Something went wrong product submit'),
                   content: Text('Please try again'),
                   actions: <Widget>[
                     FlatButton(
@@ -87,7 +88,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
       //.then((_) => setSelectedProduct(null));
     } else {
       updateProduct(_titleTextController.text, _descriptionTextController.text,
-              _formData['image'], _formData['price'], _formData['location'])
+              _formData['image'], double.parse(_priceController.text), _formData['location'])
           .then((_) {
         Navigator.pushReplacementNamed(context, '/products');
         //setSelectedProduct(null);
@@ -137,12 +138,11 @@ class _ProductEditPageState extends State<ProductEditPage> {
 
   Widget _buildDescriptionTextField(Product product) {
     if (product == null && _descriptionTextController.text.trim() == '') {
-    _descriptionTextController.text = '';
-     } else if (product != null && _descriptionTextController.text.trim() == '') {
+      _descriptionTextController.text = '';
+    } else if (product != null &&
+        _descriptionTextController.text.trim() == '') {
       _descriptionTextController.text = product.description;
     }
-
-
 
     return EnsureVisibleWhenFocused(
       focusNode: _descriptionFocusNode,
@@ -169,12 +169,26 @@ class _ProductEditPageState extends State<ProductEditPage> {
   }
 
   Widget _buildPriceTextField(Product product) {
+    if (product == null && _priceController.text.trim() == '') {
+      _priceController.text = '';
+    } else if (product != null && _priceController.text.trim() == '') {
+      _priceController.text = product.price.toString();
+    } else if (product != null && _priceController.text.trim() != '') {
+      _priceController.text = _priceController.text;
+    } else if (product == null && _priceController.text.trim() != '') {
+      _priceController.text = _priceController.text;
+    }
+    else {
+      _priceController.text = '';
+    }
+
     return EnsureVisibleWhenFocused(
       focusNode: _priceFocusNode,
       child: TextFormField(
         focusNode: _priceFocusNode,
         decoration: InputDecoration(labelText: 'Book Price'),
-        initialValue: product == null ? '' : product.price.toString(),
+        controller: _priceController,
+        //initialValue: product == null ? '' : product.price.toString(),
         validator: (String value) {
           //if(value.trim().length <= 0){
           if (value.isEmpty ||
@@ -235,8 +249,10 @@ class _ProductEditPageState extends State<ProductEditPage> {
               ),
 
               LocationInput(_setLocation, product),
-              SizedBox(height: 10.0,),
-              ImageInput(_setImage,product),
+              SizedBox(
+                height: 10.0,
+              ),
+              ImageInput(_setImage, product),
               SizedBox(
                 height: 10.0,
               ),
