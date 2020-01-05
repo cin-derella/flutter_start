@@ -82,12 +82,13 @@ class ProductsModel extends ConnectedProductsModel {
     if (imagePath != null) {
       imageUploadRequest.fields['imagePath'] = Uri.encodeComponent(imagePath);
     }
-    imageUploadRequest.headers['Authorization'] = 'Bearer ${_authenticatedUser.token}';
+    imageUploadRequest.headers['Authorization'] =
+        'Bearer ${_authenticatedUser.token}';
     print('Bearer ${_authenticatedUser.token}');
-    try{
+    try {
       final streamedResponse = await imageUploadRequest.send();
       final response = await http.Response.fromStream(streamedResponse);
-      if(response.statusCode != 200 && response.statusCode !=201){
+      if (response.statusCode != 200 && response.statusCode != 201) {
         print('Something went wrong:uploadImage');
         print(response.body);
         print('end.');
@@ -96,10 +97,9 @@ class ProductsModel extends ConnectedProductsModel {
       }
       final responseData = json.decode(response.body);
       return responseData;
-    }catch(error){
+    } catch (error) {
       print(error);
       return null;
-
     }
   }
 
@@ -109,11 +109,10 @@ class ProductsModel extends ConnectedProductsModel {
     notifyListeners();
     final uploadData = await uploadImage(image);
 
-    if(uploadData == null){
+    if (uploadData == null) {
       print('Upload failed!');
       return false;
     }
-
 
     final Map<String, dynamic> productData = {
       'title': title,
@@ -121,8 +120,8 @@ class ProductsModel extends ConnectedProductsModel {
       'price': price,
       'userEmail': _authenticatedUser.email,
       'userId': _authenticatedUser.id,
-      'imagePath':uploadData['imagePath'],
-      'imageUrl':uploadData['imageUrl'],
+      'imagePath': uploadData['imagePath'],
+      'imageUrl': uploadData['imageUrl'],
       'loc_lat': locData.latitude,
       'loc_lng': locData.longitude,
       'loc_address': locData.address
@@ -158,13 +157,30 @@ class ProductsModel extends ConnectedProductsModel {
     }
   }
 
-  Future<bool> updateProduct(String title, String description, String image,
-      double price, LocationDataX locData) {
+  Future<bool> updateProduct(String title, String description, File image,
+      double price, LocationDataX locData) async {
+    _isLoading = true;
+    notifyListeners();
+    String imageUrl = selectedProduct.image;
+    String imagePath = selectedProduct.imagePath;
+
+    if (image != null) {
+      final uploadData = await uploadImage(image);
+
+      if (uploadData == null) {
+        print('Upload failed!');
+        return false;
+      }
+
+      imageUrl = uploadData['imageUrl'];
+      imagePath = uploadData['imagePath'];
+    }
+
     final Map<String, dynamic> updateData = {
       'title': title,
       'description': description,
-      'image':
-          'https://images.findawayworld.com/v1/image/cover/CD058637?aspect=1:1&width=960',
+      'imageUrl': imageUrl,
+      'imagePath': imagePath,
       'price': price,
       'loc_lat': locData.latitude,
       'loc_lng': locData.longitude,
@@ -172,17 +188,17 @@ class ProductsModel extends ConnectedProductsModel {
       'userEmail': _authenticatedUser.email,
       'userId': _authenticatedUser.id
     };
-    return http
-        .put(
-            'https://flutter-products-16a3c.firebaseio.com/products/${selectedProduct.id}.json?auth=${_authenticatedUser.token}',
-            body: json.encode(updateData))
-        .then((http.Response response) {
+    try {
+      final http.Response response = await http.put(
+          'https://flutter-products-16a3c.firebaseio.com/products/${selectedProduct.id}.json?auth=${_authenticatedUser.token}',
+          body: json.encode(updateData));
       _isLoading = false;
       final Product updatedProduct = Product(
           id: selectedProduct.id,
           title: title,
           description: description,
-          image: image,
+          image: imageUrl,
+          imagePath: imagePath,
           price: price,
           location: locData,
           userEmail: selectedProduct.userEmail,
@@ -191,11 +207,11 @@ class ProductsModel extends ConnectedProductsModel {
       _products[selectedProductIndex] = updatedProduct;
       notifyListeners();
       return true;
-    }).catchError((error) {
+    } catch (error) {
       _isLoading = false;
       notifyListeners();
       return false;
-    });
+    }
   }
 
   Future<bool> deleteProduct(int index) {
