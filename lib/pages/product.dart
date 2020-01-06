@@ -121,7 +121,7 @@ class ProductPage extends StatelessWidget {
                   ))
             ],
           ),
-          floatingActionButton: ProductFAB(),
+          floatingActionButton: ProductFAB(product),
           //Center(child: Text('On the Book Page'),),
         ));
   }

@@ -19,7 +19,8 @@ class ProductCard extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            TitleDefault(product.title == null ? "no title provided" : product.title),
+            TitleDefault(
+                product.title == null ? "no title provided" : product.title),
             SizedBox(
               width: 8.0,
             ),
@@ -35,11 +36,14 @@ class ProductCard extends StatelessWidget {
             alignment: MainAxisAlignment.center,
             children: <Widget>[
               IconButton(
-                icon: Icon(Icons.info),
-                color: Theme.of(context).accentColor,
-                onPressed: () => Navigator.pushNamed<bool>(
-                    context, '/product/' + model.allProducts[productIndex].id),
-              ),
+                  icon: Icon(Icons.info),
+                  color: Theme.of(context).accentColor,
+                  onPressed: () {
+                    model.selectProduct(model.allProducts[productIndex].id);
+                    Navigator.pushNamed<bool>(context,
+                            '/product/' + model.allProducts[productIndex].id)
+                        .then((_) => model.selectProduct(null));
+                  }),
               IconButton(
                 icon: Icon(model.allProducts[productIndex].isFavorite
                     ? Icons.favorite
