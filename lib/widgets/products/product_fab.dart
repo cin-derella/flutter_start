@@ -38,9 +38,8 @@ class _ProductFABState extends State<ProductFAB> with TickerProviderStateMixin {
               alignment: FractionalOffset.topCenter,
               child: ScaleTransition(
                 scale: CurvedAnimation(
-                  parent: _controller,
-                  curve: Interval(0.0,1.0,curve: Curves.easeOut)
-                ),
+                    parent: _controller,
+                    curve: Interval(0.0, 1.0, curve: Curves.easeOut)),
                 child: FloatingActionButton(
                   backgroundColor: Theme.of(context).cardColor,
                   heroTag: 'contact',
@@ -64,18 +63,24 @@ class _ProductFABState extends State<ProductFAB> with TickerProviderStateMixin {
               height: 70.0,
               width: 56.0,
               alignment: FractionalOffset.topCenter,
-              child: FloatingActionButton(
-                backgroundColor: Theme.of(context).cardColor,
-                heroTag: 'favorite',
-                mini: true,
-                onPressed: () {
-                  model.toggleProductFavoriteStatus();
-                },
-                child: Icon(
-                  model.selectedProduct.isFavorite
-                      ? Icons.favorite
-                      : Icons.favorite_border,
-                  color: Colors.red,
+              child: ScaleTransition(
+                scale: CurvedAnimation(
+                  parent: _controller,
+                  curve: Interval(0.0, 0.5, curve: Curves.easeOut),
+                ),
+                child: FloatingActionButton(
+                  backgroundColor: Theme.of(context).cardColor,
+                  heroTag: 'favorite',
+                  mini: true,
+                  onPressed: () {
+                    model.toggleProductFavoriteStatus();
+                  },
+                  child: Icon(
+                    model.selectedProduct.isFavorite
+                        ? Icons.favorite
+                        : Icons.favorite_border,
+                    color: Colors.red,
+                  ),
                 ),
               ),
             ),
@@ -86,9 +91,9 @@ class _ProductFABState extends State<ProductFAB> with TickerProviderStateMixin {
                 heroTag: 'options',
                 mini: true,
                 onPressed: () {
-                  if(_controller.isDismissed){
+                  if (_controller.isDismissed) {
                     _controller.forward();
-                  }else{
+                  } else {
                     _controller.reverse();
                   }
                 },
