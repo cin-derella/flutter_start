@@ -57,7 +57,6 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget button = _buildActionButtons(context);
     return Card(
       child: Column(
         children: <Widget>[
@@ -69,8 +68,8 @@ class ProductCard extends StatelessWidget {
           ),
           _buildTitlePriceRow(),
           AddressTag(product.location.address),
-          Text(product.userEmail),
-          button,
+          _buildActionButtons(context)
+          //Text(product.userEmail),
         ],
       ),
     );

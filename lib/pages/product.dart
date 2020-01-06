@@ -7,6 +7,8 @@ import '../models/product.dart';
 
 import 'package:map_view/map_view.dart';
 
+import '../widgets/products/product_fab.dart';
+
 class ProductPage extends StatelessWidget {
   final Product product;
   ProductPage(this.product);
@@ -25,12 +27,12 @@ class ProductPage extends StatelessWidget {
             mapViewType: MapViewType.normal,
             title: 'Product Location'),
         toolbarActions: [ToolbarAction('Close', 1)]);
-    mapView.onToolbarAction.listen((int id){
-      if(id ==1){
+    mapView.onToolbarAction.listen((int id) {
+      if (id == 1) {
         mapView.dismiss();
       }
     });
-    mapView.onMapReady.listen((_){
+    mapView.onMapReady.listen((_) {
       mapView.setMarkers(markers);
     });
   }
@@ -119,6 +121,7 @@ class ProductPage extends StatelessWidget {
                   ))
             ],
           ),
+          floatingActionButton: ProductFAB(),
           //Center(child: Text('On the Book Page'),),
         ));
   }
