@@ -10,6 +10,7 @@ import './models/product.dart';
 import 'package:scoped_model/scoped_model.dart';
 import './scoped-models/main.dart';
 import 'package:map_view/map_view.dart';
+import './widgets/helpers/custom_route.dart';
 
 void main() {
   //debugPaintSizeEnabled = true;
@@ -75,7 +76,7 @@ class _MyAppState extends State<MyApp> {
                   _model.allProducts.firstWhere((Product product) {
                 return product.id == productId;
               });
-              return MaterialPageRoute<bool>(
+              return CustomRoute<bool>(
                 builder: (BuildContext context) =>!_isAuthenticated ? AuthPage() :  ProductPage(product),
               );
             }
