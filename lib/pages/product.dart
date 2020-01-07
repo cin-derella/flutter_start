@@ -102,12 +102,14 @@ class ProductPage extends StatelessWidget {
             //mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              FadeInImage(
+              Hero(
+                tag:product.id,
+              child:FadeInImage(
                 image: NetworkImage(product.image),
                 height: 300.0,
                 fit: BoxFit.cover,
                 placeholder: AssetImage('assets/background.jpg'),
-              ),
+              ),),
               Container(
                 padding: EdgeInsets.all(10.0),
                 child: TitleDefault(product.title),
