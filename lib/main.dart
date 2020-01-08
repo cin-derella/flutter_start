@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_start/scoped-models/main.dart';
+import 'package:flutter_start/widgets/ui_elements/adaptive_progress_indicator.dart';
 //import 'package:flutter/rendering.dart';
 //import './product_manager.dart';
 import './pages/auth.dart';
@@ -11,13 +12,15 @@ import 'package:scoped_model/scoped_model.dart';
 import './scoped-models/main.dart';
 import 'package:map_view/map_view.dart';
 import './widgets/helpers/custom_route.dart';
+import 'shared/global_config.dart';
+import './shared/adaptive_theme.dart';
 
 void main() {
   //debugPaintSizeEnabled = true;
   //debugPaintBaselinesEnabled = true;
   //debugPaintPointersEnabled=true;
   WidgetsFlutterBinding.ensureInitialized();
-  MapView.setApiKey('AIzaSyDBrIuz3TCkz0MsktI3yJ4wjyls2DQiERU');
+  MapView.setApiKey(apiKey);
   runApp(MyApp());
 }
 
@@ -48,11 +51,7 @@ class _MyAppState extends State<MyApp> {
     return ScopedModel<MainModel>(
       model: _model,
       child: MaterialApp(
-          theme: ThemeData(
-              brightness: Brightness.light,
-              primarySwatch: Colors.deepOrange,
-              accentColor: Colors.deepPurple,
-              buttonColor: Colors.deepPurple),
+          theme: getAdaptiveThemeData(context),
           //home: AuthPage(),
           routes: {
             '/': (BuildContext context) =>

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_start/utils.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../widgets/helpers/ensure_visible.dart';
@@ -8,6 +9,7 @@ import '../widgets/form_inputs/location.dart';
 import '../models/location_data.dart';
 import '../widgets/form_inputs/image.dart';
 import 'dart:io';
+import '../widgets/ui_elements/adaptive_progress_indicator.dart';
 
 class ProductEditPage extends StatefulWidget {
   final MainModel model;
@@ -63,8 +65,12 @@ class _ProductEditPageState extends State<ProductEditPage> {
 
     _formKey.currentState.save();
     if (selectedProductIndex == -1) {
-      addProduct(_titleTextController.text, _descriptionTextController.text,
-              _formData['image'], double.parse(_priceController.text), _formData['location'])
+      addProduct(
+              _titleTextController.text,
+              _descriptionTextController.text,
+              _formData['image'],
+              double.parse(_priceController.text),
+              _formData['location'])
           .then((bool success) {
         if (success) {
           Navigator.pushReplacementNamed(context, '/products');
@@ -87,8 +93,12 @@ class _ProductEditPageState extends State<ProductEditPage> {
       });
       //.then((_) => setSelectedProduct(null));
     } else {
-      updateProduct(_titleTextController.text, _descriptionTextController.text,
-              _formData['image'], double.parse(_priceController.text), _formData['location'])
+      updateProduct(
+              _titleTextController.text,
+              _descriptionTextController.text,
+              _formData['image'],
+              double.parse(_priceController.text),
+              _formData['location'])
           .then((_) {
         Navigator.pushReplacementNamed(context, '/products');
         //setSelectedProduct(null);
@@ -177,8 +187,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
       _priceController.text = _priceController.text;
     } else if (product == null && _priceController.text.trim() != '') {
       _priceController.text = _priceController.text;
-    }
-    else {
+    } else {
       _priceController.text = '';
     }
 
@@ -210,7 +219,9 @@ class _ProductEditPageState extends State<ProductEditPage> {
     return ScopedModelDescendant<MainModel>(
       builder: (BuildContext context, Widget child, MainModel model) {
         return model.isLoading
-            ? Center(child: CircularProgressIndicator())
+            ? Center(
+                child: AdaptiveProgressIndicator(),
+              )
             : RaisedButton(
                 child: Text('Save'),
                 //color: Theme.of(context).accentColor,
