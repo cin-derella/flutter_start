@@ -9,7 +9,6 @@ import '../../scoped-models/main.dart';
 class ProductCard extends StatelessWidget {
   final Product product;
 
-
   ProductCard(this.product);
 
   Widget _buildTitlePriceRow() {
@@ -19,12 +18,16 @@ class ProductCard extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            TitleDefault(
-                product.title == null ? "no title provided" : product.title),
-            SizedBox(
-              width: 8.0,
+            Flexible(
+              child: TitleDefault(
+                  product.title == null ? "no title provided" : product.title),
             ),
-            PriceTag(product.price.toString())
+            Flexible(child:SizedBox(
+              width: 8.0,
+            ),),
+            Flexible(
+              child: PriceTag(product.price.toString()),
+            )
           ],
         ));
   }
@@ -40,8 +43,7 @@ class ProductCard extends StatelessWidget {
                   color: Theme.of(context).accentColor,
                   onPressed: () {
                     model.selectProduct(product.id);
-                    Navigator.pushNamed<bool>(context,
-                            '/product/' + product.id)
+                    Navigator.pushNamed<bool>(context, '/product/' + product.id)
                         .then((_) => model.selectProduct(null));
                   }),
               IconButton(
@@ -65,7 +67,7 @@ class ProductCard extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Hero(
-            tag:product.id,
+            tag: product.id,
             child: FadeInImage(
               image: NetworkImage(product.image),
               height: 300.0,
