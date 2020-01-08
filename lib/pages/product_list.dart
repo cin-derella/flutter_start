@@ -21,7 +21,7 @@ class _ProductListPageState extends State<ProductListPage> {
   @override
   initState() {
 
-    widget.model.fetchProducts(onlyForUser:true);
+    widget.model.fetchProducts(onlyForUser:true,clearExisting: true);
       print('fetch in productListPageState initState');
     super.initState();
   }

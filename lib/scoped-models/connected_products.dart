@@ -242,8 +242,12 @@ class ProductsModel extends ConnectedProductsModel {
     return f;
   }
 
-  Future<Null> fetchProducts({onlyForUser = false}) {
+  Future<Null> fetchProducts({onlyForUser = false,clearExisting = false}) {
     _isLoading = true;
+    if(clearExisting){
+       _products = [];
+    }
+   
     //print('pure fetchProducts');
     notifyListeners();
     return http

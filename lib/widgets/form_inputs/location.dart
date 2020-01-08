@@ -7,6 +7,8 @@ import 'package:http/http.dart' as http;
 import '../../models/location_data.dart';
 import '../../models/product.dart';
 import 'package:location/location.dart' as geoloc;
+import '../../shared/global_config.dart';
+
 
 class LocationInput extends StatefulWidget {
   final Function setLocation;
@@ -53,7 +55,7 @@ class _LocationInputState extends State<LocationInput> {
       final Uri uri = Uri.https(
           'maps.googleapis.com', '/maps/api/geocode/json', {
         'address': address,
-        'key': 'AIzaSyDBrIuz3TCkz0MsktI3yJ4wjyls2DQiERU'
+        'key': apiKey,
       });
 
       final http.Response response = await http.get(uri);
